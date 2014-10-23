@@ -1,34 +1,20 @@
-gulp-javascript-plugin-template
+EveEmi
 ===
 
 JSプラグイン作成用gulpタスク
 
 ##usage
 
-init
-```
-$ git clone git@github.com:isoden/gulp-javascript-plugin-template.git
-$ mv gulp-javascript-plugin-template <project_name> && cd $_
-$ rm -rf .git/ && npm install
-$ $EDITOR src/<PLUGIN>.js
-```
+```js
+var obj = new EveEmi;
+obj.set = function (key, value) {
+    this[key] = value;
+    this.trigger('set');
+};
+obj.on('set', function () {
+    alert('set!');
+});
 
-if you use a altJS: `false` -> `true`
+obj.set('name', 'isoden'); // alert: 'set!'
 
-```coffee
-config =
-    coffee: false
-    ts: false
 ```
-
-develop
-```
-$ gulp watch
-```
-`run tasks: ['jshint']`
-
-build
-```
-$ gulp build
-```
-`run tasks: ['header', 'rename', 'uglify']`
