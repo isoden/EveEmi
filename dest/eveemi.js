@@ -17,16 +17,32 @@
 })(this, function () {
     var slice, hasProp, each, mixin, EveEmi;
 
+    // shortcut native method
     slice   = Array.prototype.slice;
     hasProp = Object.prototype.hasOwnProperty;
-    each    = function (list, callback) {
+
+    /**
+     * リストのイテレータ
+     *
+     * @param {array|object}
+     * @param {callback}
+     */
+    each = function (list, callback) {
         var i   = 0,
             max = list.length;
         for (; i < max; i += 1) {
             callback.call(list[i], list[i], i);
         }
     };
-    mixin   = function (base, obj) {
+
+    /**
+     * _.extend的な
+     *
+     * @param {object} 拡張されるのオブジェクト
+     * @param {object} 追加されるプロパティ
+     * @return base
+     */
+    mixin = function (base, obj) {
         var i;
         for (i in obj) if (hasProp.call(obj, i)) {
             base[i] = obj[i];
@@ -36,11 +52,20 @@
 
     EveEmi = (function () {
         function EveEmi() {
+            // initialize
             this._init();
         }
+
         EveEmi.fn = EveEmi.prototype;
 
         mixin(EveEmi.fn, {
+            /**
+             * イベント登録
+             *
+             * @param {string}
+             * @param {function}
+             * @param {any}
+             */
             on: function (type, callback, context) {
                 if (!this._events[type]) {
                     this._events[type] = [];
@@ -52,7 +77,14 @@
                 });
                 return this;
             },
-            off: function (type, callback) {
+
+            /**
+             * イベント解除
+             *
+             * @param {string}
+             * @param {func}
+             */
+            off: function (type, func) {
                 var _this = this;
 
                 if (!this._events[type]) {
@@ -60,11 +92,18 @@
                 }
 
                 each(this._events[type], function (o, i) {
-                    if (callback === o.callback) {
+                    if (func === o.func) {
                         _this._events[type].splice(i, 1);
                     }
                 });
             },
+
+            /**
+             * イベントを発火させる
+             *
+             * @param {string}
+             * @param {any} type以降に可変長引数を取る
+             */
             trigger: function (type) {
                 var args = slice.call(arguments, 1);
 
@@ -76,6 +115,10 @@
                     o.callback.apply(o.context, args);
                 });
             },
+
+            /**
+             * this._eventsを初期化する
+             */
             _init: function () {
                 this._events = {};
             }
