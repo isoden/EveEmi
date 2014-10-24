@@ -104,7 +104,7 @@
 
                 this._events[type].push({
                     callback: callback,
-                    context: context,
+                    context: context || this,
                     once: true
                 });
             },
@@ -116,8 +116,8 @@
              * @param {any} type以降に可変長引数を取る
              */
             trigger: function (type) {
-                var _this = this;
-                var args  = slice.call(arguments, 1);
+                var _this = this,
+                    args  = slice.call(arguments, 1);
 
                 if (!this._events[type]) {
                     return;
@@ -141,5 +141,6 @@
 
         return EveEmi;
     })();
+
     return EveEmi;
 });
