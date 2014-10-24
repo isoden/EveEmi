@@ -92,9 +92,28 @@
                 }
 
                 each(this._events[type], function (o, i) {
-                    if (func === o.func) {
+                    if (func === o.callback) {
                         _this._events[type].splice(i, 1);
                     }
+                });
+            },
+
+            /**
+             * 一回だけ実行される
+             *
+             * @param {string}
+             * @param {function}
+             * @param {context}
+             */
+            once: function (type, callback, context) {
+                if (!this._events[type]) {
+                    this._events[type] = [];
+                }
+
+                this._events[type].push({
+                    callback: callback,
+                    context: context,
+                    once: true
                 });
             },
 
@@ -105,7 +124,8 @@
              * @param {any} type以降に可変長引数を取る
              */
             trigger: function (type) {
-                var args = slice.call(arguments, 1);
+                var _this = this;
+                var args  = slice.call(arguments, 1);
 
                 if (!this._events[type]) {
                     return;
@@ -113,6 +133,9 @@
 
                 each(this._events[type], function (o, i) {
                     o.callback.apply(o.context, args);
+                    if (o.once) {
+                        _this.off(type, o.callback);
+                    }
                 });
             },
 
