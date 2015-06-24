@@ -7,18 +7,31 @@
 <body>
   <script src="../dest/eveemi.js"></script>
   <script>
-  var eveemi = new EveEmi();
-  eveemi.on('add destroy', function (time) {
-    console.log('added or destroied at \n', time);
-  });
 
-  setTimeout(function () {
-    eveemi.trigger('add', new Date());
-  }, 1000);
+  var View = function (model) {
+    EveEmi.apply(this, arguments);
+    this.model = model;
+    this.listenTo(this.model, 'add', this.render, this);
+  };
 
-  setTimeout(function () {
-    eveemi.trigger('destroy', new Date());
-  }, 1500);
+
+  View.prototype = new EveEmi();
+
+  View.prototype.render = function (args) {
+    console.log('[exec] [View::render]', this);
+  };
+
+
+  var Model = function () {
+    EveEmi.apply(this, arguments);
+  };
+  Model.prototype = new EveEmi();
+
+  var model = new Model();
+  var view = new View(model);
+
+  model.trigger('add');
+
   </script>
 </body>
 </html>

@@ -58,6 +58,16 @@ var EveEmi = (function () {
       });
     }
   }, {
+    key: 'listenTo',
+    value: function listenTo(target, type, callback, ctx, once) {
+      target.on(type, callback, ctx, once);
+    }
+  }, {
+    key: 'listenToOnce',
+    value: function listenToOnce(target, type, callback, ctx) {
+      this.listenTo(target, type, callback, ctx, true);
+    }
+  }, {
     key: 'off',
 
     /**

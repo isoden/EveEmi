@@ -37,6 +37,14 @@ export default class EveEmi {
     });
   }
 
+  listenTo(target, type, callback, ctx, once) {
+    target.on(type, callback, ctx, once);
+  }
+
+  listenToOnce(target, type, callback, ctx) {
+    this.listenTo(target, type, callback, ctx, true);
+  }
+
   /**
    * イベント解除
    * @method off
