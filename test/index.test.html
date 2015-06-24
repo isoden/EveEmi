@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+</head>
+<body>
+  <script src="../dest/eveemi.js"></script>
+  <script>
+  var eveemi = new EveEmi();
+  eveemi.on('add', function (time) {
+    console.log('added at \n', time);
+  });
+
+  setTimeout(function () {
+    eveemi.trigger('add', new Date());
+  }, 1000);
+  </script>
+</body>
+</html>

@@ -1,153 +1,146 @@
-/*!
- * EveEmi v1.0.0
- * https://github.com/isoden/EveEmi.git
- *
- * Copyright (c) 2014 YU ISODA
- * Licensed under the MIT license.
- */
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.EveEmi = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 
-;(function (global, factory) {
-    if (typeof define === 'function' && define.amd) {
-        define('EveEmi', [], factory());
-    } else if (typeof module !== 'undefined' && module.exports) {
-        module.exports = factory();
-    } else {
-        global.EveEmi = factory();
-    }
-})(this, function () {
-    var slice, hasProp, each, mixin, EveEmi;
+'use strict';
 
-    // shortcut native method
-    slice   = Array.prototype.slice;
-    hasProp = Object.prototype.hasOwnProperty;
-
-    /**
-     * リストのイテレータ
-     *
-     * @param {array|object}
-     * @param {callback}
-     */
-    each = function (list, callback) {
-        var i   = 0,
-            max = list.length;
-        for (; i < max; i += 1) {
-            callback.call(list[i], list[i], i);
-        }
-    };
-
-    /**
-     * _.extend的な
-     *
-     * @param {object} 拡張されるのオブジェクト
-     * @param {object} 追加されるプロパティ
-     * @return base
-     */
-    mixin = function (base, obj) {
-        var i;
-        for (i in obj) if (hasProp.call(obj, i)) {
-            base[i] = obj[i];
-        }
-        return base[i];
-    };
-
-    EveEmi = (function () {
-        function EveEmi() {
-            // initialize
-            this._init();
-        }
-
-        EveEmi.fn = EveEmi.prototype;
-
-        mixin(EveEmi.fn, {
-            /**
-             * イベント登録
-             *
-             * @param {string}
-             * @param {function}
-             * @param {any}
-             */
-            on: function (type, callback, context) {
-                if (!this._events[type]) {
-                    this._events[type] = [];
-                }
-
-                this._events[type].push({
-                    callback: callback,
-                    context: context || this
-                });
-                return this;
-            },
-
-            /**
-             * イベント解除
-             *
-             * @param {string}
-             * @param {func}
-             */
-            off: function (type, func) {
-                var _this = this;
-
-                if (!this._events[type]) {
-                    return;
-                }
-
-                each(this._events[type], function (o, i) {
-                    if (func === o.callback) {
-                        _this._events[type].splice(i, 1);
-                    }
-                });
-            },
-
-            /**
-             * 一回だけ実行される
-             *
-             * @param {string}
-             * @param {function}
-             * @param {context}
-             */
-            once: function (type, callback, context) {
-                if (!this._events[type]) {
-                    this._events[type] = [];
-                }
-
-                this._events[type].push({
-                    callback: callback,
-                    context: context,
-                    once: true
-                });
-            },
-
-            /**
-             * イベントを発火させる
-             *
-             * @param {string}
-             * @param {any} type以降に可変長引数を取る
-             */
-            trigger: function (type) {
-                var _this = this;
-                var args  = slice.call(arguments, 1);
-
-                if (!this._events[type]) {
-                    return;
-                }
-
-                each(this._events[type], function (o, i) {
-                    o.callback.apply(o.context, args);
-                    if (o.once) {
-                        _this.off(type, o.callback);
-                    }
-                });
-            },
-
-            /**
-             * this._eventsを初期化する
-             */
-            _init: function () {
-                this._events = {};
-            }
-        });
-
-        return EveEmi;
-    })();
-    return EveEmi;
+Object.defineProperty(exports, '__esModule', {
+  value: true
 });
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+var EveEmi = (function () {
+  /**
+   * 初期化処理
+   * @constructor
+   */
+
+  function EveEmi() {
+    _classCallCheck(this, EveEmi);
+
+    this._allListener = {};
+  }
+
+  _createClass(EveEmi, [{
+    key: 'on',
+
+    /**
+     * イベント登録
+     * @method on
+     * @param  {String}   type
+     * @param  {Function} callback
+     * @param  {Object}   ctx
+     * @param  {Boolean}  once
+     * @public
+     */
+    value: function on(type, callback, ctx) {
+      var once = arguments[3] === undefined ? false : arguments[3];
+
+      // イベントが2個以上指定されている場合
+      if (/\s/.test(type.trim())) {
+        var types = type.splice(' ');
+      }
+
+      if (!this._allListener[type]) {
+        this._allListener[type] = [];
+      }
+
+      this._allListener[type].push({
+        ctx: ctx,
+        once: once,
+        callback: callback
+      });
+    }
+  }, {
+    key: 'off',
+
+    /**
+     * イベント解除
+     * @method off
+     * @param {String}   type
+     * @param {Function} func
+     * @public
+     */
+    value: function off(type, func) {
+      var _this = this;
+
+      if (!this._allListener[type]) {
+        return;
+      }
+
+      this._each(type, function (o, i) {
+        if (func === o.callback) {
+          _this._allListener[type].splice(i, 1);
+        }
+      });
+    }
+  }, {
+    key: 'once',
+
+    /**
+     * 一回だけ実行される
+     * @method once
+     * @param  {String}   type
+     * @param  {Function} callback
+     * @param  {Object}   ctx
+     * @public
+     */
+    value: function once(type, callback, ctx) {
+      this.on(type, callback, ctx, true);
+    }
+  }, {
+    key: 'trigger',
+
+    /**
+     * イベントを発火させる
+     * @method trigger
+     * @param {String} type
+     * @param {Any}    args callbackに渡す引数(可変長引数)
+     * @public
+     */
+    value: function trigger(type) {
+      var _this2 = this;
+
+      for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+        args[_key - 1] = arguments[_key];
+      }
+
+      if (!this._allListener[type]) {
+        return;
+      }
+
+      this._each(type, function (o, i) {
+        o.callback.apply(o.ctx, args);
+        if (o.once) {
+          _this2.off(type, o.callback);
+        }
+      });
+    }
+  }, {
+    key: '_each',
+
+    /**
+     * リスナーのイテレータ
+     * @method each
+     * @param {String}           type
+     * @param {Function}         callback
+     * @param {Object|Undefined} ctx
+     * @protected
+     */
+    value: function _each(type, callback, ctx) {
+      this._allListener[type].forEach(callback, ctx);
+    }
+  }]);
+
+  return EveEmi;
+})();
+
+exports['default'] = EveEmi;
+module.exports = exports['default'];
+
+},{}]},{},[1])(1)
+});
+
+
+//# sourceMappingURL=eveemi.js.map

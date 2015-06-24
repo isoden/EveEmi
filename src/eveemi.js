@@ -1,146 +1,101 @@
-;(function (global, factory) {
-    if (typeof define === 'function' && define.amd) {
-        define('EveEmi', [], factory());
-    } else if (typeof module !== 'undefined' && module.exports) {
-        module.exports = factory();
-    } else {
-        global.EveEmi = factory();
+
+'use strict';
+
+export default class EveEmi {
+  /**
+   * 初期化処理
+   * @constructor
+   */
+  constructor() {
+    this._allListener = {};
+  }
+
+  /**
+   * イベント登録
+   * @method on
+   * @param  {String}   type
+   * @param  {Function} callback
+   * @param  {Object}   ctx
+   * @param  {Boolean}  once
+   * @public
+   */
+  on(type, callback, ctx, once = false) {
+    // イベントが2個以上指定されている場合
+    if (/\s/.test(type.trim())) {
+      let types = type.splice(' ');
     }
-})(this, function () {
-    var slice, hasProp, each, mixin, EveEmi;
 
-    // shortcut native method
-    slice   = Array.prototype.slice;
-    hasProp = Object.prototype.hasOwnProperty;
+    if (!this._allListener[type]) {
+      this._allListener[type] = [];
+    }
 
-    /**
-     * リストのイテレータ
-     *
-     * @param {array|object}
-     * @param {callback}
-     */
-    each = function (list, callback) {
-        var i   = 0,
-            max = list.length;
-        for (; i < max; i += 1) {
-            callback.call(list[i], list[i], i);
-        }
-    };
+    this._allListener[type].push({
+      ctx     : ctx,
+      once    : once,
+      callback: callback,
+    });
+  }
 
-    /**
-     * _.extend的な
-     *
-     * @param {object} 拡張されるのオブジェクト
-     * @param {object} 追加されるプロパティ
-     * @return base
-     */
-    mixin = function (base, obj) {
-        var i;
-        for (i in obj) if (hasProp.call(obj, i)) {
-            base[i] = obj[i];
-        }
-        return base[i];
-    };
+  /**
+   * イベント解除
+   * @method off
+   * @param {String}   type
+   * @param {Function} func
+   * @public
+   */
+  off(type, func) {
+    if (!this._allListener[type]) {
+      return;
+    }
 
-    EveEmi = (function () {
-        function EveEmi() {
-            // initialize
-            this._init();
-        }
+    this._each(type, (o, i) => {
+      if (func === o.callback) {
+        this._allListener[type].splice(i, 1);
+      }
+    });
+  }
 
-        EveEmi.fn = EveEmi.prototype;
+  /**
+   * 一回だけ実行される
+   * @method once
+   * @param  {String}   type
+   * @param  {Function} callback
+   * @param  {Object}   ctx
+   * @public
+   */
+  once(type, callback, ctx) {
+    this.on(type, callback, ctx, true);
+  }
 
-        mixin(EveEmi.fn, {
-            /**
-             * イベント登録
-             *
-             * @param {string}
-             * @param {function}
-             * @param {any}
-             */
-            on: function (type, callback, context) {
-                if (!this._events[type]) {
-                    this._events[type] = [];
-                }
+  /**
+   * イベントを発火させる
+   * @method trigger
+   * @param {String} type
+   * @param {Any}    args callbackに渡す引数(可変長引数)
+   * @public
+   */
+  trigger(type, ...args) {
+    if (!this._allListener[type]) {
+      return;
+    }
 
-                this._events[type].push({
-                    callback: callback,
-                    context: context || this
-                });
-                return this;
-            },
+    this._each(type, (o, i) => {
+      o.callback.apply(o.ctx, args);
+      if (o.once) {
+        this.off(type, o.callback);
+      }
+    });
+  }
 
-            /**
-             * イベント解除
-             *
-             * @param {string}
-             * @param {func}
-             */
-            off: function (type, func) {
-                var _this = this;
-
-                if (!this._events[type]) {
-                    return;
-                }
-
-                each(this._events[type], function (o, i) {
-                    if (func === o.callback) {
-                        _this._events[type].splice(i, 1);
-                    }
-                });
-            },
-
-            /**
-             * 一回だけ実行される
-             *
-             * @param {string}
-             * @param {function}
-             * @param {context}
-             */
-            once: function (type, callback, context) {
-                if (!this._events[type]) {
-                    this._events[type] = [];
-                }
-
-                this._events[type].push({
-                    callback: callback,
-                    context: context || this,
-                    once: true
-                });
-            },
-
-            /**
-             * イベントを発火させる
-             *
-             * @param {string}
-             * @param {any} type以降に可変長引数を取る
-             */
-            trigger: function (type) {
-                var _this = this,
-                    args  = slice.call(arguments, 1);
-
-                if (!this._events[type]) {
-                    return;
-                }
-
-                each(this._events[type], function (o, i) {
-                    o.callback.apply(o.context, args);
-                    if (o.once) {
-                        _this.off(type, o.callback);
-                    }
-                });
-            },
-
-            /**
-             * this._eventsを初期化する
-             */
-            _init: function () {
-                this._events = {};
-            }
-        });
-
-        return EveEmi;
-    })();
-
-    return EveEmi;
-});
+  /**
+   * リスナーのイテレータ
+   * @method each
+   * @param {String}           type
+   * @param {Function}         callback
+   * @param {Object|Undefined} ctx
+   * @protected
+   */
+  _each(type, callback, ctx) {
+    this._allListener[type].forEach(callback, ctx);
+  }
+}
