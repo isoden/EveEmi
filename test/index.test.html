@@ -8,13 +8,17 @@
   <script src="../dest/eveemi.js"></script>
   <script>
   var eveemi = new EveEmi();
-  eveemi.on('add', function (time) {
-    console.log('added at \n', time);
+  eveemi.on('add destroy', function (time) {
+    console.log('added or destroied at \n', time);
   });
 
   setTimeout(function () {
     eveemi.trigger('add', new Date());
   }, 1000);
+
+  setTimeout(function () {
+    eveemi.trigger('destroy', new Date());
+  }, 1500);
   </script>
 </body>
 </html>

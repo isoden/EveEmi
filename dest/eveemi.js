@@ -35,11 +35,16 @@ var EveEmi = (function () {
      * @public
      */
     value: function on(type, callback, ctx) {
+      var _this = this;
+
       var once = arguments[3] === undefined ? false : arguments[3];
 
       // イベントが2個以上指定されている場合
       if (/\s/.test(type.trim())) {
-        var types = type.splice(' ');
+        var types = type.split(' ');
+        return types.forEach(function (type) {
+          return _this.on(type, callback, ctx, once);
+        });
       }
 
       if (!this._allListener[type]) {
@@ -63,7 +68,7 @@ var EveEmi = (function () {
      * @public
      */
     value: function off(type, func) {
-      var _this = this;
+      var _this2 = this;
 
       if (!this._allListener[type]) {
         return;
@@ -71,7 +76,7 @@ var EveEmi = (function () {
 
       this._each(type, function (o, i) {
         if (func === o.callback) {
-          _this._allListener[type].splice(i, 1);
+          _this2._allListener[type].splice(i, 1);
         }
       });
     }
@@ -100,7 +105,7 @@ var EveEmi = (function () {
      * @public
      */
     value: function trigger(type) {
-      var _this2 = this;
+      var _this3 = this;
 
       for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
         args[_key - 1] = arguments[_key];
@@ -113,7 +118,7 @@ var EveEmi = (function () {
       this._each(type, function (o, i) {
         o.callback.apply(o.ctx, args);
         if (o.once) {
-          _this2.off(type, o.callback);
+          _this3.off(type, o.callback);
         }
       });
     }

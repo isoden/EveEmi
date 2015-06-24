@@ -22,7 +22,8 @@ export default class EveEmi {
   on(type, callback, ctx, once = false) {
     // イベントが2個以上指定されている場合
     if (/\s/.test(type.trim())) {
-      let types = type.splice(' ');
+      let types = type.split(' ');
+      return types.forEach(type => this.on(type, callback, ctx, once));
     }
 
     if (!this._allListener[type]) {
