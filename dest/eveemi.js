@@ -42,8 +42,8 @@ var EveEmi = (function () {
       // イベントが2個以上指定されている場合
       if (/\s/.test(type.trim())) {
         var types = type.split(' ');
-        return types.forEach(function (type) {
-          return _this.on(type, callback, ctx, once);
+        return types.forEach(function (_type) {
+          return _this.on(_type, callback, ctx, once);
         });
       }
 
@@ -66,6 +66,11 @@ var EveEmi = (function () {
     key: 'listenToOnce',
     value: function listenToOnce(target, type, callback, ctx) {
       this.listenTo(target, type, callback, ctx, true);
+    }
+  }, {
+    key: 'stopListening',
+    value: function stopListening(target, type, func) {
+      target.off(type, func);
     }
   }, {
     key: 'off',

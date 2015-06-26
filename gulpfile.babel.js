@@ -15,6 +15,7 @@ import watchify   from 'watchify';
 import browserify from 'browserify';
 
 const SRC_FILE     = './src/eveemi.js';
+const DEST_FILE    = './dest/eveemi.js';
 const DEST_DIR     = './dest';
 const PACKAGE_NAME = 'EveEmi';
 
@@ -22,7 +23,7 @@ let $              = loader();
 let bundleOpts     = assign({}, watchify.args, {debug: true, entries: [SRC_FILE], standalone: PACKAGE_NAME});
 let bundler        = watchify(browserify(bundleOpts));
 let bundle         = () => {
-  bundler
+  return bundler
     .bundle()
     .on('error', err => $.util.log(err.message))
     .pipe(source('eveemi.js'))
@@ -61,17 +62,14 @@ gulp.task('eslint', () => {
 gulp.task('bundle', bundle);
 
 gulp.task('build', () => {
-  // uncompressed
-  gulp.src(SRC_FILE)
-    .pipe($.header(header))
-    .pipe(gulp.dest(DEST_DIR));
-
-  // minifiy
-  gulp.src(SRC_FILE)
-    .pipe($.uglify())
-    .pipe($.header(header))
-    .pipe($.rename({suffix: '.min'}))
-    .pipe(gulp.dest(DEST_DIR));
+  run('bundle', () => {
+    gulp.src(DEST_FILE)
+      .pipe($.header(header))
+      .pipe(gulp.dest(DEST_DIR))
+      .pipe($.uglify({preserveComments: 'some'}))
+      .pipe($.rename({suffix: '.min'}))
+      .pipe(gulp.dest(DEST_DIR));
+  })
 });
 
 gulp.task('test', () => {

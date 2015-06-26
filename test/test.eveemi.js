@@ -9,11 +9,13 @@ var assert = require('power-assert');
 
 describe('メソッドのテスト', function () {
   var eveemi;
+  var eveemi2;
   var executed;
   var execCount;
 
   beforeEach(function () {
     eveemi    = new EveEmi();
+    eveemi2   = new EveEmi();
     executed  = false;
     execCount = 0;
   });
@@ -67,6 +69,19 @@ describe('メソッドのテスト', function () {
     eveemi.trigger('test');
     eveemi.off('test', plpl);
     eveemi.trigger('test');
+
+    assert(execCount === 1);
+  });
+
+  it('stopListeningで購読を解除できる', function () {
+    function plpl() {
+      execCount += 1;
+    }
+
+    eveemi.listenTo(eveemi2, 'test', plpl);
+    eveemi2.trigger('test');
+    eveemi.stopListening(eveemi2, 'test', plpl);
+    eveemi2.trigger('test');
 
     assert(execCount === 1);
   });

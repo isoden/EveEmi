@@ -45,6 +45,10 @@ export default class EveEmi {
     this.listenTo(target, type, callback, ctx, true);
   }
 
+  stopListening(target, type, func) {
+    target.off(type, func);
+  }
+
   /**
    * イベント解除
    * @method off
