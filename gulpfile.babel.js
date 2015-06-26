@@ -3,6 +3,8 @@
  * - build system の設定を定義
  */
 
+import run        from 'run-sequence';
+import del        from 'del';
 import pkg        from './package.json';
 import gulp       from 'gulp';
 import buffer     from 'vinyl-buffer';
@@ -12,9 +14,12 @@ import loader     from 'gulp-load-plugins';
 import watchify   from 'watchify';
 import browserify from 'browserify';
 
-let $ = loader();
+const SRC_FILE     = './src/eveemi.js';
+const DEST_DIR     = './dest';
+const PACKAGE_NAME = 'EveEmi';
 
-let bundleOpts     = assign({}, watchify.args, {debug: true, entries: ['./src/eveemi.js'], standalone: 'EveEmi'});
+let $              = loader();
+let bundleOpts     = assign({}, watchify.args, {debug: true, entries: [SRC_FILE], standalone: PACKAGE_NAME});
 let bundler        = watchify(browserify(bundleOpts));
 let bundle         = () => {
   bundler
@@ -38,47 +43,54 @@ let header = `
 
 `;
 
-let path = {
-  src: {
-    js: 'src/*.js'
-  },
-  dest: {
-    to: 'dest/'
-  }
-};
+gulp.task('default', ['bundle'], () => {
+  $.watch(SRC_FILE, () => run('eslint'));
 
-/**
- * default task
- */
-gulp.task('default', ['js:bundle'], () => {
   bundler.on('update', bundle);
-  bundler.on('log',    $.util.log);
+  bundler.on('log'   , $.util.log);
 });
 
-/**
- * js:bundle task
- */
-gulp.task('js:bundle', bundle);
+gulp.task('eslint', () => {
+  gulp.src(SRC_FILE)
+    .pipe($.plumber())
+    .pipe($.eslint())
+    .pipe($.eslint.format())
+    .pipe($.eslint.failOnError());
+});
 
-/**
- * js:build task
- */
+gulp.task('bundle', bundle);
+
 gulp.task('build', () => {
   // uncompressed
-  gulp.src(path.src.js)
+  gulp.src(SRC_FILE)
     .pipe($.header(header))
-    .pipe(gulp.dest(path.dest.to));
+    .pipe(gulp.dest(DEST_DIR));
 
   // minifiy
-  gulp.src(path.src.js)
+  gulp.src(SRC_FILE)
     .pipe($.uglify())
     .pipe($.header(header))
     .pipe($.rename({suffix: '.min'}))
-    .pipe(gulp.dest(path.dest.to));
+    .pipe(gulp.dest(DEST_DIR));
 });
 
 gulp.task('test', () => {
-  gulp.src('test/**/*.js')
-    .pipe($.espower())
-    .pipe($.mocha());
+  run('test:pre', 'test:exec', 'test:post');
 });
+
+gulp.task('test:pre', () => {
+  gulp.src('test/*.js')
+    .pipe($.espower())
+    .pipe(gulp.dest('./test/compiled'));
+});
+
+gulp.task('test:exec', () => {
+  gulp.src('test/compiled/*.js')
+    .pipe($.mocha());
+})
+
+gulp.task('test:post', (cb) => {
+  del([
+    'test/compiled'
+  ], cb);
+})

@@ -23,7 +23,7 @@ export default class EveEmi {
     // イベントが2個以上指定されている場合
     if (/\s/.test(type.trim())) {
       let types = type.split(' ');
-      return types.forEach(type => this.on(type, callback, ctx, once));
+      return types.forEach(_type => this.on(_type, callback, ctx, once));
     }
 
     if (!this._allListener[type]) {
@@ -33,7 +33,7 @@ export default class EveEmi {
     this._allListener[type].push({
       ctx     : ctx,
       once    : once,
-      callback: callback,
+      callback: callback
     });
   }
 
@@ -88,7 +88,7 @@ export default class EveEmi {
       return;
     }
 
-    this._each(type, (o, i) => {
+    this._each(type, (o) => {
       o.callback.apply(o.ctx, args);
       if (o.once) {
         this.off(type, o.callback);

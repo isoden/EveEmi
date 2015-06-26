@@ -125,7 +125,7 @@ var EveEmi = (function () {
         return;
       }
 
-      this._each(type, function (o, i) {
+      this._each(type, function (o) {
         o.callback.apply(o.ctx, args);
         if (o.once) {
           _this3.off(type, o.callback);
