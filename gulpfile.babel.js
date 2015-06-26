@@ -79,18 +79,19 @@ gulp.task('test', () => {
 });
 
 gulp.task('test:pre', () => {
-  gulp.src('test/*.js')
+  return gulp.src(['test/*.js', '!test/*.compiled.js'])
     .pipe($.espower())
-    .pipe(gulp.dest('./test/compiled'));
+    .pipe($.rename({suffix: '.compiled'}))
+    .pipe(gulp.dest('./test/'));
 });
 
 gulp.task('test:exec', () => {
-  gulp.src('test/compiled/*.js')
+  return gulp.src('test/*.compiled.js')
     .pipe($.mocha());
-})
+});
 
 gulp.task('test:post', (cb) => {
-  del([
-    'test/compiled'
+  return del([
+    './test/*.compiled.js'
   ], cb);
-})
+});

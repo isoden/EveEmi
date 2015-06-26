@@ -9,9 +9,13 @@ var assert = require('power-assert');
 
 describe('メソッドのテスト', function () {
   var eveemi;
+  var executed;
+  var execCount;
 
   beforeEach(function () {
-    eveemi = new EveEmi();
+    eveemi    = new EveEmi();
+    executed  = false;
+    execCount = 0;
   });
 
   it('onでコールバックが登録できる', function () {
@@ -21,7 +25,6 @@ describe('メソッドのテスト', function () {
   });
 
   it('triggerでコールバックが発火する', function () {
-    var executed = false;
     eveemi.on('test', function () {
       executed = true;
     });
@@ -43,5 +46,28 @@ describe('メソッドのテスト', function () {
     assert(a = 1);
     assert(b = 2);
     assert(c = 3);
+  });
+
+  it('onceで一度だけコールバックが発火する', function () {
+    eveemi.once('test', function () {
+      execCount += 1;
+    });
+    eveemi.trigger('test');
+    eveemi.trigger('test');
+    eveemi.trigger('test');
+    eveemi.trigger('test');
+    assert(execCount === 1);
+  });
+
+  it('offで購読を解除できる', function () {
+    function plpl() {
+      execCount += 1;
+    }
+    eveemi.on('test', plpl);
+    eveemi.trigger('test');
+    eveemi.off('test', plpl);
+    eveemi.trigger('test');
+
+    assert(execCount === 1);
   });
 });
