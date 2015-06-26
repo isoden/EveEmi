@@ -1,20 +1,48 @@
 EveEmi
 ===
 
-JSプラグイン作成用gulpタスク
-
-##usage
-
-```js
-var obj = new EveEmi;
-obj.set = function (key, value) {
-    this[key] = value;
-    this.trigger('set');
-};
-obj.on('set', function () {
-    alert('set!');
-});
-
-obj.set('name', 'isoden'); // alert: 'set!'
+## Installation
 
 ```
+$ npm install @isoden/eveemi --save
+```
+
+## Usage
+
+```js
+var Model = function () {
+  EveEmi.apply(this, arguments);
+
+  this.attrs = {};
+};
+Model.prototype = new EveEmi();
+
+Model.prototype.set = function (key, value) {
+  this.attrs[key] = value;
+  this.trigger('set');
+};
+
+var model = new Model();
+
+model.on('set', function () {
+  alert('set!');
+});
+
+model.set('name', 'isoden'); // alert: 'set!'
+
+```
+
+
+## API
+
+### on(type: string, callback: function[, ctx: object, once: boolean = false])
+### once(type: string, callback: function[, ctx: object])
+### off(type: string, func: function)
+### listenTo(target: EveEmi, type: string, callback: function[, ctx: object, once: boolean = false])
+### listenToOnce(target: EveEmi, type: string, callback: function[, ctx: object])
+### trigger(type: string, [...args])
+
+## License
+
+MIT License
+http://isoden.mit-license.org
