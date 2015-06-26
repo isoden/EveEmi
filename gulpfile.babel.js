@@ -76,3 +76,9 @@ gulp.task('build', () => {
     .pipe($.rename({suffix: '.min'}))
     .pipe(gulp.dest(path.dest.to));
 });
+
+gulp.task('test', () => {
+  gulp.src('test/**/*.js')
+    .pipe($.espower())
+    .pipe($.mocha());
+});
