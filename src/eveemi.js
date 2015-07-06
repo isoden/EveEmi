@@ -1,6 +1,11 @@
 
 'use strict';
 
+// ユーティリティ関数をインポート
+import {
+  forEach
+} from './utility';
+
 export default class EveEmi {
   /**
    * 初期化処理
@@ -23,7 +28,7 @@ export default class EveEmi {
     // イベントが2個以上指定されている場合
     if (/\s/.test(type.trim())) {
       let types = type.split(' ');
-      return types.forEach(_type => this.on(_type, callback, ctx, once));
+      return forEach(types, _type => this.on(_type, callback, ctx, once));
     }
 
     if (!this._allListener[type]) {
@@ -109,6 +114,6 @@ export default class EveEmi {
    * @protected
    */
   _each(type, callback, ctx) {
-    this._allListener[type].forEach(callback, ctx);
+    forEach(this._allListener[type], callback, ctx);
   }
 }

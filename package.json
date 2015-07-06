@@ -1,6 +1,6 @@
 {
   "name": "@isoden/eveemi",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Small Event Module",
   "main": "dest/eveemi.js",
   "scripts": {

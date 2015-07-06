@@ -30,6 +30,7 @@ describe('メソッドのテスト', function () {
     eveemi.on('test', function () {
       executed = true;
     });
+
     eveemi.trigger('test');
 
     assert(executed);
