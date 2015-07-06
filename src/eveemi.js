@@ -43,14 +43,41 @@ export default class EveEmi {
     });
   }
 
+  /**
+   * targetオブジェクトのイベントを購読する
+   * @method listenTo
+   * @param  {EveEmi}   target
+   * @param  {String}   type
+   * @param  {Function} callback
+   * @param  {Object}   ctx
+   * @param  {Boolean}  once
+   * @public
+   */
   listenTo(target, type, callback, ctx, once) {
     target.on(type, callback, ctx, once);
   }
 
+  /**
+   * targetオブジェクトのイベントを一度だけ購読する
+   * @method listenToOnce
+   * @param  {EveEmi}   target
+   * @param  {String}   type
+   * @param  {Function} callback
+   * @param  {Object}   ctx
+   * @public
+   */
   listenToOnce(target, type, callback, ctx) {
     this.listenTo(target, type, callback, ctx, true);
   }
 
+  /**
+   * targetオブジェクトのイベントを解除する
+   * @method stopListening
+   * @param  {EveEmi}   target
+   * @param  {String}   type
+   * @param  {Function} callback
+   * @public
+   */
   stopListening(target, type, func) {
     target.off(type, func);
   }
