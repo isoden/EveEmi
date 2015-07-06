@@ -1,6 +1,6 @@
 
 /*!
- * @isoden/eveemi v1.1.1
+ * @isoden/eveemi v1.1.2
  * https://github.com/isoden/EveEmi.git
  *
  * Copyright (c) 2015 YU ISODA
@@ -53,8 +53,8 @@ var EveEmi = (function () {
       var once = arguments[3] === undefined ? false : arguments[3];
 
       // イベントが2個以上指定されている場合
-      if (/\s/.test(type.trim())) {
-        var types = type.split(' ');
+      if (/\s/.test((0, _utility.trim)(type))) {
+        var types = (0, _utility.trim)(type).split(' ');
         return (0, _utility.forEach)(types, function (_type) {
           return _this.on(_type, callback, ctx, once);
         });
@@ -177,12 +177,13 @@ module.exports = exports['default'];
  * utility.js
  */
 
-"use strict";
+'use strict';
 
-Object.defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, '__esModule', {
   value: true
 });
 exports.forEach = forEach;
+exports.trim = trim;
 
 function forEach(arr, callback, ctx) {
   var i = 0;
@@ -191,6 +192,12 @@ function forEach(arr, callback, ctx) {
   for (; i < max; i += 1) {
     callback.call(ctx, arr[i], i, arr);
   }
+}
+
+function trim(str) {
+  // refs: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/Trim
+  var rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g;
+  return ('' + str).replace(rtrim, '');
 }
 
 },{}]},{},[1])(1)

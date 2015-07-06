@@ -3,7 +3,8 @@
 
 // ユーティリティ関数をインポート
 import {
-  forEach
+  forEach,
+  trim
 } from './utility';
 
 export default class EveEmi {
@@ -26,8 +27,8 @@ export default class EveEmi {
    */
   on(type, callback, ctx, once = false) {
     // イベントが2個以上指定されている場合
-    if (/\s/.test(type.trim())) {
-      let types = type.split(' ');
+    if (/\s/.test(trim(type))) {
+      let types = trim(type).split(' ');
       return forEach(types, _type => this.on(_type, callback, ctx, once));
     }
 
