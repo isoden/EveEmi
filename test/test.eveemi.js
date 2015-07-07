@@ -4,8 +4,8 @@
 
 'use strict';
 
-var EveEmi = require('../dest/eveemi');
-var assert = require('power-assert');
+var EveEmi = require('../');
+var assert = require('chai').assert;
 
 describe('メソッドのテスト', function () {
   var eveemi;

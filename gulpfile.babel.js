@@ -73,23 +73,6 @@ gulp.task('build', () => {
 });
 
 gulp.task('test', () => {
-  run('test:pre', 'test:exec', 'test:post');
-});
-
-gulp.task('test:pre', () => {
-  return gulp.src(['test/*.js', '!test/*.compiled.js'])
-    .pipe($.espower())
-    .pipe($.rename({suffix: '.compiled'}))
-    .pipe(gulp.dest('./test/'));
-});
-
-gulp.task('test:exec', () => {
-  return gulp.src('test/*.compiled.js')
+  return gulp.src('test/*.js')
     .pipe($.mocha());
-});
-
-gulp.task('test:post', (cb) => {
-  return del([
-    './test/*.compiled.js'
-  ], cb);
 });
