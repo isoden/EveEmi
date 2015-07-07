@@ -3,6 +3,8 @@ EveEmi
 
 [![npm](https://img.shields.io/npm/v/@isoden/eveemi.svg?style=flat-square)](https://www.npmjs.com/package/@isoden/eveemi)
 
+[![browser support](http://ci.testling.com/isoden/eveemi.png)](http://ci.testling.com/isoden/eveemi)
+
 ## Installation
 
 ```
