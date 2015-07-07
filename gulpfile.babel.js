@@ -14,8 +14,8 @@ import loader     from 'gulp-load-plugins';
 import watchify   from 'watchify';
 import browserify from 'browserify';
 
-const SRC_FILE     = './src/eveemi.js';
-const DEST_FILE    = './dest/eveemi.js';
+const SRC_FILE     = './src/eveemi-compat.js';
+const DEST_FILE    = './dest/eveemi-compat.js';
 const DEST_DIR     = './dest';
 const PACKAGE_NAME = 'EveEmi';
 
@@ -26,7 +26,7 @@ let bundle         = () => {
   return bundler
     .bundle()
     .on('error', err => $.util.log(err.message))
-    .pipe(source('eveemi.js'))
+    .pipe(source('eveemi-compat.js'))
     .pipe(buffer())
     .pipe($.sourcemaps.init({loadMaps: true}))
     .pipe($.sourcemaps.write('./'))

@@ -1,12 +1,12 @@
-EveEmi
+eveemi-compat
 ===
 
-[![npm](https://img.shields.io/npm/v/@isoden/eveemi.svg?style=flat-square)](https://www.npmjs.com/package/@isoden/eveemi)
+[![npm](https://img.shields.io/npm/v/@isoden/eveemi-compat.svg?style=flat-square)](https://www.npmjs.com/package/@isoden/eveemi-compat)
 
 ## Installation
 
 ```
-$ npm install @isoden/eveemi --save
+$ npm install @isoden/eveemi-compat --save
 ```
 
 ## Usage
