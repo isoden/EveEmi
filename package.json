@@ -6,7 +6,7 @@
   "scripts": {
     "start": "gulp",
     "build": "gulp build",
-    "test": "gulp test"
+    "test": "zuul test/test.eveemi.js"
   },
   "author": {
     "name": "YU ISODA",
@@ -53,27 +53,7 @@
     "run-sequence": "^1.1.1",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
-    "watchify": "^3.2.3"
-  },
-  "testling": {
-    "browsers": {
-      "ie": [
-        8,
-        9,
-        10
-      ],
-      "ff": [
-        37,
-        38,
-        39
-      ],
-      "chrome": [
-        41,
-        42,
-        43
-      ]
-    },
-    "barness": "mocha",
-    "files": "test/*.js"
+    "watchify": "^3.2.3",
+    "zuul": "^3.2.0"
   }
 }
