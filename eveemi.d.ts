@@ -1,5 +1,5 @@
 declare module "@isoden/eveemi" {
-  class EveEmi {
+  export class EveEmi {
     private _allListener;
 
     /**
