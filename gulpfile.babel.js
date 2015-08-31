@@ -8,6 +8,7 @@ import del        from 'del';
 import pkg        from './package.json';
 import gulp       from 'gulp';
 import tsify      from 'tsify';
+import {exec}     from 'child_process';
 import buffer     from 'vinyl-buffer';
 import source     from 'vinyl-source-stream';
 import assign     from 'object-assign';
@@ -15,9 +16,9 @@ import loader     from 'gulp-load-plugins';
 import watchify   from 'watchify';
 import browserify from 'browserify';
 
-const SRC_FILE     = './src/eveemi.ts';
-const DEST_FILE    = './dest/eveemi.js';
-const DEST_DIR     = './dest';
+const SRC_FILE     = './lib/eveemi.js';
+const DEST_FILE    = './eveemi.js';
+const DEST_DIR     = './';
 const PACKAGE_NAME = 'EveEmi';
 
 let $              = loader();
@@ -34,7 +35,7 @@ let bundle         = function () {
     .pipe(buffer())
     .pipe($.sourcemaps.init({loadMaps: true}))
     .pipe($.sourcemaps.write('./'))
-    .pipe(gulp.dest('./dest'));
+    .pipe(gulp.dest('./'));
 };
 
 var header = `/*!
@@ -48,6 +49,7 @@ var header = `/*!
 `;
 
 gulp.task('default', ['bundle'], function () {
+  exec('npm run watch');
   bundler.on('log'   , $.util.log);
   bundler.on('update', bundle);
 });

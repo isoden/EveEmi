@@ -1,3 +1,4 @@
 gulpfile.babel.js
 src
 test
+node_modules

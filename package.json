@@ -2,11 +2,12 @@
   "name": "@isoden/eveemi",
   "version": "1.1.4",
   "description": "Tiny Event Module",
-  "main": "dest/eveemi.js",
+  "main": "lib/eveemi.js",
   "scripts": {
     "start": "gulp",
     "build": "gulp build",
-    "test": "zuul test/test.eveemi.js"
+    "test": "zuul test/test.eveemi.js",
+    "watch": "tsc src/eveemi.ts --outDir lib --watch --module commonjs"
   },
   "author": {
     "name": "YU ISODA",
@@ -39,6 +40,7 @@
     "power-assert": "^0.11.0",
     "run-sequence": "^1.1.1",
     "tsify": "^0.11.10",
+    "typescript": "^1.5.3",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.2.3",
